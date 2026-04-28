@@ -4,15 +4,14 @@ Drop a card-export CSV onto the window (or click Browse...) and the app
 will run the rule-2 / rule-3 transformations and prompt you for a save
 location for the transformed CSV.
 
-Build for distribution (Windows):
-    python -m PyInstaller --onefile --windowed ^
-        --name CardCSVTransformer ^
-        --add-data "parallel_vocab.txt;." ^
-        --collect-all tkinterdnd2 ^
-        app.py
+Build for distribution:
+    Windows:  build.bat   ->  dist\\CardCSVTransformer.exe
+    macOS:    ./build.sh  ->  dist/CardCSVTransformer.app
+    Linux:    ./build.sh  ->  dist/CardCSVTransformer
 
-The resulting `dist\\CardCSVTransformer.exe` is a single self-contained
-binary — no Python install needed on the recipient's machine.
+The resulting binary is self-contained — no Python install needed on
+the recipient's machine. PyInstaller cannot cross-compile, so the build
+must run on the same OS as the target.
 """
 
 from __future__ import annotations
@@ -24,6 +23,15 @@ from pathlib import Path
 
 import tkinter as tk
 from tkinter import filedialog, messagebox
+
+# Use a font family that exists on the current OS. Segoe UI is Windows-only;
+# on macOS it falls back to a generic font that looks out of place.
+if sys.platform == "darwin":
+    UI_FONT = "Helvetica Neue"
+elif sys.platform.startswith("linux"):
+    UI_FONT = "DejaVu Sans"
+else:
+    UI_FONT = "Segoe UI"
 
 from transform_cards import VOCAB_PATH, load_parallel_vocab, transform_csv
 
@@ -65,7 +73,7 @@ class App:
         header = tk.Frame(self.root)
         header.pack(fill="x", padx=20, pady=(18, 0))
         tk.Label(header, text="Card CSV Transformer",
-                 font=("Segoe UI", 16, "bold")).pack(anchor="w")
+                 font=(UI_FONT, 16, "bold")).pack(anchor="w")
         tk.Label(header, text=("Transforms a card-export CSV into the "
                                "5-column listing format."),
                  fg="#555").pack(anchor="w", pady=(2, 0))
@@ -79,12 +87,12 @@ class App:
                if HAS_DND
                else "Click Browse… to pick a CSV file")
         self.drop_label = tk.Label(self.drop_frame, text=msg, bg=self.DROP_BG,
-                                   font=("Segoe UI", 14), fg="#333")
+                                   font=(UI_FONT, 14), fg="#333")
         self.drop_label.pack(expand=True)
         self.drop_hint = tk.Label(self.drop_frame,
                                   text="(or click Browse… below)",
                                   bg=self.DROP_BG, fg="#888",
-                                  font=("Segoe UI", 9))
+                                  font=(UI_FONT, 9))
         self.drop_hint.pack(pady=(0, 18))
 
         if HAS_DND:
