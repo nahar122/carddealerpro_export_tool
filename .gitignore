@@ -1,0 +1,15 @@
+# Generated artifacts from transform_cards.py / db_analysis.py
+*_transformed.csv
+debug.log
+
+# DB-analysis dumps may contain card data we don't want public
+db_analysis_*.txt
+db_validation_mismatches.csv
+
+# Python
+__pycache__/
+*.pyc
+
+# Local secrets
+.env
+*.env
