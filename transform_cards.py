@@ -17,7 +17,15 @@ import re
 import sys
 from pathlib import Path
 
-SCRIPT_DIR = Path(__file__).resolve().parent
+def _resource_dir() -> Path:
+    """Where bundled resources live, both in dev and inside a PyInstaller exe."""
+    bundled = getattr(sys, '_MEIPASS', None)
+    if bundled:
+        return Path(bundled)
+    return Path(__file__).resolve().parent
+
+
+SCRIPT_DIR = _resource_dir()
 VOCAB_PATH = SCRIPT_DIR / 'parallel_vocab.txt'
 
 # Built-in fallback vocab if parallel_vocab.txt is missing. Kept short — the

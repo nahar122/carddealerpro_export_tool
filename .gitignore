@@ -10,6 +10,11 @@ db_validation_mismatches.csv
 __pycache__/
 *.pyc
 
+# PyInstaller build outputs
+build/
+dist/
+*.spec
+
 # Local secrets
 .env
 *.env
