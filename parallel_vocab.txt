@@ -1,0 +1,156 @@
+# Parallel vocabulary for transform_cards.py
+#
+# Format: one term per line. Multi-word terms on a single line, separated by
+# single spaces. Lines starting with '#' are comments. Blank lines are ignored.
+# All terms are matched case-insensitively.
+#
+# Two sections, separated by a section header:
+#   [tokens]      — words/phrases that *signal* a parallel. A run of tokens
+#                   (and optional qualifiers) at the end of the subset string
+#                   triggers the split. At least one token must be present in
+#                   the trailing run for a split to happen.
+#   [qualifiers]  — words/phrases that may *appear inside* a parallel run but
+#                   are not enough on their own. They glue tokens together
+#                   without triggering a split by themselves.
+#
+# When the heuristic guesses wrong, the fix is usually to add a missing term
+# here — no Python edits needed.
+
+[tokens]
+
+# Single-word colors
+red
+blue
+green
+yellow
+orange
+purple
+pink
+black
+white
+gold
+silver
+bronze
+aqua
+teal
+fuchsia
+emerald
+ruby
+sapphire
+amber
+copper
+jade
+neon
+crimson
+magenta
+cyan
+onyx
+opal
+pearl
+rainbow
+obsidian
+turquoise
+violet
+indigo
+maroon
+
+# Single-word finishes / parallel-defining nouns
+refractor
+refractors
+prizm
+prizms
+mojo
+wave
+raywave
+velocity
+lava
+hyper
+sparkle
+holo
+foil
+ice
+pulsar
+mosaic
+shimmer
+pandora
+kaleidoscope
+atomic
+x-fractor
+xfractor
+superfractor
+disco
+camo
+scope
+mirror
+holographic
+chrome
+explosion
+flash
+flare
+laser
+lazer
+neon
+pyro
+prism
+rayfractor
+
+# Multi-word colors (descriptors that aren't standalone colors)
+burnt umber
+cherry blossoms
+light blue
+dark blue
+royal blue
+sky blue
+ice blue
+navy blue
+electric blue
+forest green
+hot pink
+electric yellow
+hot red
+cool gray
+
+# Multi-word finishes / multi-word parallels
+cracked ice
+tiger stripe
+snake eye
+ben baller
+green ice
+gold ice
+red ice
+blue ice
+silver ice
+prizm shock
+green pulsar
+red pulsar
+blue pulsar
+mirror gold
+mirror black
+mirror red
+mirror blue
+mirror green
+power pulsar
+disco prism
+
+[qualifiers]
+
+# Glue words / qualifiers — appear inside parallel runs but never trigger a
+# split on their own. Deliberately *not* listed here: insert-name nouns like
+# "autograph"/"autographs" (they belong in the subset, not the parallel) and
+# generic words like "edition"/"parallel".
+die
+cut
+die-cut
+numbered
+shock
+border
+stripes
+&
+and
+of
+the
+sp
+ssp
+sps
+x
+to
