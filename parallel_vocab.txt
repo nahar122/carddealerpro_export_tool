@@ -110,6 +110,54 @@ electric yellow
 hot red
 cool gray
 
+# Discovered from CardTemplate DB (~13.7K rows, vetted parallels in line4)
+sepia
+cracked
+reactive
+tectonic
+seismic
+glitter
+genesis
+foilboard
+shield
+# 'xtra' tested as a token but broke "Xtra Points <color>" CSV inputs
+# where "Xtra Points" is the insert (Donruss Prestige series). The DB has
+# a few rows where "Xtra Points" is the parallel — accepting that as a
+# trade-off in favor of the more common CSV pattern.
+electric
+# 'huddle' tested as a token but "No Huddle" is also a Panini insert in
+# some sets; left out for the same reason as 'xtra'.
+plate
+coating
+printing
+honeycomb
+checker
+checkerboard
+platinum
+lime
+blackout
+pumpkins
+plaid
+spectrum
+refactor
+metallic
+prismatic
+fluorescent
+kelp
+cosmos
+proof
+authentic
+holographic
+winter
+fireworks
+geometric
+avalanche
+astro
+flood
+asia
+sandglitter
+sunburst
+
 # Multi-word finishes / multi-word parallels
 cracked ice
 tiger stripe
@@ -132,12 +180,47 @@ mirror green
 power pulsar
 disco prism
 
+# Multi-word phrases discovered from CardTemplate (sports + some Pokemon)
+operation desert shield
+no huddle
+fast break
+electric etch
+art rare
+illustration rare
+ultra rare
+hyper rare
+trainer gallery
+galarian gallery
+donut circles
+blue donut circles
+authentic on-card
+on-card autograph
+on-card auto
+press proof
+# 'press proofs' (plural) was tested but matched "Press Proofs Blue" CSV
+# inserts. Singular "Press Proof" stays — it's safer and matches DB
+# parallels like "(Green Press Proof)".
+metallic glitter
+white jersey variation
+red foilboard
+orange foilboard
+pink camo
+red white blue
+holiday tree
+red fireworks
+blue fireworks
+green fireworks
+basketball refractor
+green topps refractor
+# 'rookie cup team' was tested as a multi-word parallel but caused real
+# inserts like "Topps All-Star Rookie Cup Team" to be mis-split. Removed.
+
 [qualifiers]
 
 # Glue words / qualifiers — appear inside parallel runs but never trigger a
 # split on their own. Deliberately *not* listed here: insert-name nouns like
-# "autograph"/"autographs" (they belong in the subset, not the parallel) and
-# generic words like "edition"/"parallel".
+# "autographs" (plural — belongs in the subset, e.g. "Chrome Update
+# Autographs") and generic words like "edition"/"parallel".
 die
 cut
 die-cut
@@ -154,3 +237,29 @@ ssp
 sps
 x
 to
+
+# Discovered from CardTemplate DB. Singular "autograph" / "auto" / "on-card"
+# appear *inside* parallels (e.g. "(Authentic On-Card Autograph)"); plural
+# "Autographs" stays out of the vocab so insert names like "Chrome Update
+# Autographs" still keep their last word.
+on-card
+autograph
+auto
+holiday
+w/
+etch
+art
+rare
+illustration
+status
+basketball
+no
+parallel
+-
+variation
+spanish
+# 'edition', 'super', 'special', 'premium', 'international', 'collection',
+# 'double', 'points' all tested but they appear in CSV insert names too
+# often to safely treat as qualifiers (e.g. "Xtra Points <color>", "Special
+# Edition <color>"). Left out — DB rows with these in parallels stay in
+# the residual mismatch bucket.
