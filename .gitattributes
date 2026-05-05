@@ -1,0 +1,6 @@
+# Preserve exact bytes of golden test fixtures across platforms. Without
+# this, git on Linux checks them out with LF endings, which breaks the
+# byte-for-byte comparison in transform_test.go (the Go CSV writer emits
+# CRLF to match Python's output).
+transform/testdata/*.csv -text
+transform/testdata/*.txt -text
