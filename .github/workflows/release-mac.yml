@@ -1,0 +1,39 @@
+name: Release Mac binary
+
+# Triggered when a v* tag is pushed (e.g. v1.0.0). Builds the Mac
+# universal binary, packages it into a zip with executable perms, and
+# creates a GitHub Release with the zip attached. The Pages landing
+# page in /docs links at releases/latest/download/CardCSVTransformer-mac.zip,
+# so each new tag automatically becomes the new "Download for Mac" target.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write   # needed by softprops/action-gh-release to create the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          check-latest: true
+
+      - name: Run tests
+        run: go test ./...
+
+      - name: Build Mac universal binary + zip
+        shell: pwsh
+        run: ./build_mac.ps1
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/CardCSVTransformer-mac.zip
+          generate_release_notes: true

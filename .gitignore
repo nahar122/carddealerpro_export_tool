@@ -18,3 +18,13 @@ dist/
 # Local secrets
 .env
 *.env
+
+# Go build output
+cardcsv
+cardcsv.exe
+
+# Claude Code session artifacts
+.claude/
+
+# Keep golden test fixtures even though they match the *_transformed.csv glob above
+!transform/testdata/*

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Card CSV Transformer for Mac</title>
+    <style>
+        :root {
+            --bg: #f7f7f8;
+            --card: #ffffff;
+            --border: #e3e3e6;
+            --text: #1a1a1a;
+            --muted: #5b5b62;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --code-bg: #1f2937;
+            --code-text: #f3f4f6;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+        }
+        main {
+            max-width: 680px;
+            margin: 3rem auto;
+            padding: 0 1.5rem 4rem;
+        }
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
+        }
+        header p {
+            color: var(--muted);
+            margin-top: 0;
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+        .download-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .download-card .file {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+        .download-button {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 0.85rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            transition: background 0.15s;
+        }
+        .download-button:hover { background: var(--accent-hover); }
+        .platform-warning {
+            background: #fff8e1;
+            border: 1px solid #fbd76a;
+            color: #6b4f00;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+        .platform-warning.show { display: block; }
+        h2 {
+            font-size: 1.25rem;
+            margin-top: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+        ol { padding-left: 1.5rem; }
+        ol li { margin-bottom: 0.6rem; }
+        code, pre {
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+            font-size: 0.92rem;
+        }
+        code {
+            background: #eef0f3;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+        }
+        pre code {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+        }
+        details {
+            margin-top: 2rem;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+        }
+        details summary {
+            cursor: pointer;
+            font-weight: 500;
+        }
+        details[open] summary { margin-bottom: 0.75rem; }
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        footer a { color: var(--muted); }
+    </style>
+</head>
+<body>
+<main>
+    <header>
+        <h1>Card CSV Transformer</h1>
+        <p>Turns a CardDealerPro export CSV into the 5-column listing format.</p>
+    </header>
+
+    <div id="platform-warning" class="platform-warning">
+        This download is for macOS. You appear to be on a different platform &mdash;
+        the binary will not run for you.
+    </div>
+
+    <div class="download-card">
+        <div class="file"><code>CardCSVTransformer-mac.zip</code> &middot; ~6.5 MB &middot; Apple Silicon &amp; Intel</div>
+        <a class="download-button"
+           href="https://github.com/nahar122/carddealerpro_export_tool/releases/latest/download/CardCSVTransformer-mac.zip">
+            Download for Mac
+        </a>
+    </div>
+
+    <h2>Setup (first time only)</h2>
+    <ol>
+        <li>Double-click the downloaded <code>CardCSVTransformer-mac.zip</code> to extract it. You'll get a file called <code>CardCSVTransformer</code>.</li>
+        <li>Double-click <code>CardCSVTransformer</code>. macOS will say <em>&ldquo;cannot be opened because the developer cannot be verified.&rdquo;</em> Click <strong>Cancel</strong>.</li>
+        <li>Right-click <code>CardCSVTransformer</code> &rarr; <strong>Open</strong> &rarr; click <strong>Open</strong> in the dialog. macOS remembers this choice for future runs.</li>
+    </ol>
+
+    <h2>Each time you use it</h2>
+    <ol>
+        <li>Double-click <code>CardCSVTransformer</code>. A new browser tab opens automatically.</li>
+        <li>Click <strong>Choose CSV file</strong>, pick your CardDealerPro export, then <strong>Transform &amp; download</strong>.</li>
+        <li>The transformed CSV downloads automatically.</li>
+        <li>Click <strong>Quit</strong> on the page when finished.</li>
+    </ol>
+
+    <details>
+        <summary>If right-click &rarr; Open doesn't work</summary>
+        <p>Open Terminal (Cmd&nbsp;+&nbsp;Space &rarr; type &ldquo;Terminal&rdquo;) and run:</p>
+        <pre><code>xattr -dr com.apple.quarantine ~/Downloads/CardCSVTransformer
+chmod +x ~/Downloads/CardCSVTransformer</code></pre>
+        <p>Then double-click <code>CardCSVTransformer</code> again.</p>
+    </details>
+
+    <details>
+        <summary>What's actually happening</summary>
+        <p>The binary starts a tiny local web server on your Mac (only your Mac &mdash; nothing leaves your machine), then opens your browser to its upload page. Your CSV is processed in memory and the result streams back as a download. When you click Quit, the server shuts down and the program exits.</p>
+        <p>It's unsigned because we don't pay Apple for a Developer ID certificate &mdash; that's why macOS warns you the first time. The right-click &rarr; Open dance is macOS's way of letting you opt in.</p>
+    </details>
+
+    <footer>
+        <a href="https://github.com/nahar122/carddealerpro_export_tool">Source on GitHub</a>
+    </footer>
+</main>
+
+<script>
+    // Best-effort platform hint. Mac UA strings vary; if we can't tell, stay silent.
+    var ua = navigator.userAgent || "";
+    var isMac = /Mac OS X|Macintosh/i.test(ua);
+    if (ua && !isMac) {
+        document.getElementById("platform-warning").classList.add("show");
+    }
+</script>
+</body>
+</html>
