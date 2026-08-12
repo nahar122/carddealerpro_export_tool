@@ -69,6 +69,24 @@ TOPPS_BRANDS = {
 # Matches the "YYYY" or "YYYY-YY" prefix at the start of a set name
 # followed by whitespace, so we can insert a brand-family token after it.
 YEAR_PATTERN = re.compile(r'^(\d{4}(?:-\d{2})?)\s+')
+SEASON_PATTERN = re.compile(r'^\s*((?:19|20)\d{2}(?:-\d{2})?)\b')
+BAD_YEAR_PATTERN = re.compile(r'^\d{5,}')
+
+
+def repair_set_year(set_name: str, year_str: str, title: str = '') -> str:
+    """Repair a Sheets-coerced date serial using trusted row fields."""
+    stripped = (set_name or '').strip()
+    if not BAD_YEAR_PATTERN.match(stripped):
+        return set_name
+
+    year_match = SEASON_PATTERN.match(year_str or '')
+    title_match = SEASON_PATTERN.match(title or '')
+    season = year_match.group(1) if year_match else ''
+    if title_match and (not season or ('-' not in season and '-' in title_match.group(1))):
+        season = title_match.group(1)
+    if not season:
+        return set_name
+    return BAD_YEAR_PATTERN.sub(season, stripped, count=1)
 
 
 def transform_set(set_name: str, year_str: str, brand: str) -> str:
@@ -78,6 +96,19 @@ def transform_set(set_name: str, year_str: str, brand: str) -> str:
 
     # 2e: "University" -> "U" anywhere it appears.
     set_name = re.sub(r'\bUniversity\b', 'U', set_name)
+
+    # Canonical manufacturer names for Fleer's Ultra/Flair families.
+    set_name = re.sub(r'\b(?:fleer\s+)?flair\s*showcase\b',
+                      'Fleer Flair Showcase', set_name, flags=re.IGNORECASE)
+    set_name = re.sub(r'\b(?:fleer\s+)?flair\b', 'Fleer Flair', set_name,
+                      flags=re.IGNORECASE)
+    set_name = re.sub(r'\b(?:fleer\s+)?ultra\b', 'Fleer Ultra', set_name,
+                      flags=re.IGNORECASE)
+
+    # SP is an Upper Deck set family when it directly follows the year.
+    set_name = re.sub(r'^(\d{4}(?:-\d{2})?)\s+(?:upper\s+deck\s+)?sp\b',
+                      r'\1 Upper Deck SP', set_name, count=1,
+                      flags=re.IGNORECASE)
 
     # 2a-iii: any set containing "Hoops" should read "Panini NBA Hoops".
     if re.search(r'\bHoops\b', set_name) and 'NBA Hoops' not in set_name:
@@ -272,8 +303,13 @@ def transform_row(row: dict, tokens: frozenset, qualifiers: frozenset,
             'card number': '', 'parallel': '',
         }
 
-    set_name = transform_set(
+    set_name = repair_set_year(
         row.get('set', '') or '',
+        row.get('year', '') or '',
+        row.get('title', '') or '',
+    )
+    set_name = transform_set(
+        set_name,
         row.get('year', '') or '',
         row.get('brand', '') or '',
     )

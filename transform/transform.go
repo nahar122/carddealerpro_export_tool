@@ -64,10 +64,41 @@ var toppsBrands = newSet(
 
 var (
 	yearPattern       = regexp.MustCompile(`^(\d{4}(?:-\d{2})?)\s+`)
+	seasonPattern     = regexp.MustCompile(`^\s*((?:19|20)\d{2}(?:-\d{2})?)\b`)
+	badYearPattern    = regexp.MustCompile(`^\d{5,}`)
 	universityPattern = regexp.MustCompile(`\bUniversity\b`)
 	hoopsPattern      = regexp.MustCompile(`\bHoops\b`)
 	finestPattern     = regexp.MustCompile(`\bFinest\b`)
+	ultraPattern      = regexp.MustCompile(`(?i)\b(?:fleer\s+)?ultra\b`)
+	flairShowPattern  = regexp.MustCompile(`(?i)\b(?:fleer\s+)?flair\s*showcase\b`)
+	flairPattern      = regexp.MustCompile(`(?i)\b(?:fleer\s+)?flair\b`)
+	spSetPattern      = regexp.MustCompile(`(?i)^(\d{4}(?:-\d{2})?)\s+(?:upper\s+deck\s+)?sp\b`)
 )
+
+// RepairSetYear is a defensive input validation for files that have already
+// passed through a spreadsheet formula. Google Sheets may coerce a season such
+// as 2001-02 into date serial 36923. Prefer the trusted year column, or (when
+// that column only has the starting year) the title's full season.
+func RepairSetYear(setName, yearStr, title string) string {
+	if !badYearPattern.MatchString(strings.TrimSpace(setName)) {
+		return setName
+	}
+
+	season := ""
+	if match := seasonPattern.FindStringSubmatch(yearStr); len(match) > 1 {
+		season = match[1]
+	}
+	if match := seasonPattern.FindStringSubmatch(title); len(match) > 1 &&
+		(season == "" || (!strings.Contains(season, "-") && strings.Contains(match[1], "-"))) {
+		season = match[1]
+	}
+	if season == "" {
+		return setName
+	}
+
+	trimmed := strings.TrimSpace(setName)
+	return badYearPattern.ReplaceAllString(trimmed, season)
+}
 
 // LoadVocab parses parallel_vocab.txt-formatted content from r and returns
 // the (tokens, qualifiers) sets. Sections are introduced with [tokens] /
@@ -121,6 +152,15 @@ func TransformSet(setName, yearStr, brand string) string {
 
 	// 2e: "University" -> "U" anywhere it appears.
 	setName = universityPattern.ReplaceAllString(setName, "U")
+
+	// Canonical manufacturer names for Fleer's Ultra/Flair families. These
+	// rules are case-insensitive and also fix the joined "FlairShowcase" form.
+	setName = flairShowPattern.ReplaceAllString(setName, "Fleer Flair Showcase")
+	setName = flairPattern.ReplaceAllString(setName, "Fleer Flair")
+	setName = ultraPattern.ReplaceAllString(setName, "Fleer Ultra")
+
+	// SP is an Upper Deck set family when it directly follows the year.
+	setName = spSetPattern.ReplaceAllString(setName, "${1} Upper Deck SP")
 
 	// 2a-iii: any set containing "Hoops" should read "NBA Hoops" — replace
 	// only the first occurrence (mirroring Python re.sub count=1).
@@ -353,7 +393,8 @@ func TransformRow(row map[string]string, tokens, qualifiers stringSet) map[strin
 		}
 	}
 
-	setName := TransformSet(row["set"], row["year"], row["brand"])
+	setName := RepairSetYear(row["set"], row["year"], row["title"])
+	setName = TransformSet(setName, row["year"], row["brand"])
 	outSubset, outParallel, _ := TransformSubset(row["subset"], row["attributes"], tokens, qualifiers)
 
 	cardNumber := strings.TrimSpace(row["card_number"])
